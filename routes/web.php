@@ -20,8 +20,10 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::prefix('administracion')
-		->namespace('Administrativos\Pagos')
+		->namespace('Administrativos')
 		->group(function () {
-
+			Route::get('bautismos', 'BautismosController@index');
+			Route::get('crear-bautismo', 'BautismosController@create');
+			Route::post('guardar-bautismo', 'BautismosController@guardar');
 		});
 });

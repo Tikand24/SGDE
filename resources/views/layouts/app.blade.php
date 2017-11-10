@@ -5,16 +5,20 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Material Admin</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>GIH - @yield('title') </title>
+        <title>{{ config('app.name') }} - @yield('title') </title>
         <!-- Vendor CSS -->
         <link href="{{ asset('administracion/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/animate.css/animate.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}" rel="stylesheet">
-
+        <link href="{{ asset('administracion/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.css') }}" rel="stylesheet">
+        <link href="{{ asset('administracion/vendors/bower_components/nouislider/distribute/nouislider.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('administracion/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('administracion/vendors/farbtastic/farbtastic.css') }}" rel="stylesheet">
+        <link href="{{ asset('administracion/vendors/bower_components/chosen/chosen.css') }}" rel="stylesheet">
+        <l
         <!-- CSS -->
         <link href="{{ asset('administracion/css/app_1.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/css/app_2.min.css') }}" rel="stylesheet">
@@ -114,13 +118,29 @@
         <script src="{{ asset('administracion/vendors/bootstrap-growl/bootstrap-growl.min.js') }}"></script>
         <script src="{{ asset('administracion/vendors/bower_components/sweetalert/dist/sweetalert.min.js') }}"></script>
         <script src="{{ asset('administracion/vendors/bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/nouislider/distribute/nouislider.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/summernote/dist/summernote-updated.min.js') }}"></script>
+
 
         <!-- Placeholder for IE9 -->
         <!--[if IE 9 ]>
             <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
         <![endif]-->
 
-        <script src="{{ asset('administracion/js/app.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/chosen/chosen.jquery.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/fileinput/fileinput.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/input-mask/input-mask.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/farbtastic/farbtastic.min.js') }}"></script>
+
+        <!-- Placeholder for IE9 -->
+        <!--[if IE 9 ]>
+            <script src="vendors/bower_components/jquery-placeholder/jquery.placeholder.min.js"></script>
+        <![endif]-->
+
+        <script src="{{ asset('administracion/js/app.js') }}"></script>
         @yield('scripts')
     </body>
   </html>

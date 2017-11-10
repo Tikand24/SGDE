@@ -1299,7 +1299,7 @@ $(document).ready(function(){
     //Date
     if ($('.date-picker')[0]) {
     	$('.date-picker').datetimepicker({
-    	    format: 'DD/MM/YYYY'
+    	    format: 'YYYY-MM-DD'
     	});
     }
 
