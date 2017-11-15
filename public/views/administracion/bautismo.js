@@ -1,6 +1,82 @@
+var app = new Vue({
+    el: '#app',
+    data: {
+        message: 'Hello Vue!',
+        bautizado: {
+            id: '',
+            nombre: '',
+            libro: '',
+            folio: '',
+            partida: '',
+            padre: '',
+            madre: '',
+            abueloPaterno: '',
+            abuelaPaterna: '',
+            abueloMaterno: '',
+            abuelaMaterna: '',
+            padrino: '',
+            madrina: '',
+            fechaNacimiento: '',
+            ciudadNacimiento: '',
+            fechaBautismo: '',
+            celebrante: ''
+        }
+    },
+    methods: {
+        guardar: function() {
+            this.$http.post('/administracion/guardar-bautismo',this.bautizado).then((response) => {
+                if (response.body.estado == 'validador') {
+                        jQuery.each(response.body.errors, function(i, value) {
+                            toastr.warning(value)
+                        })
+                    } else {
+                        if (response.body.estado == 'ok') {
+                            if (response.body.tipo == 'update') {
+                                toastr.success('Paciente actualizado correctamente');
+                            }
+                            if (response.body.tipo == 'save') {
+                                toastr.success('Paciente creado correctamente');
+                            }
+                        }
+                    }
+                console.log('Bien');
+                console.log(response.body);
+            }, (error) => {
+                toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
+                console.log('Mal');
+                console.log(error);
+            });
+        }
+    },
+    mounted() {
+        entorno = this;
+        $('#fechaNacimiento').datetimepicker({
+            format: 'YYYY-MM-DD',
+            maxDate: moment().format("YYYY-MM-DD")
+        }).on('dp.change', function(e) {
+            entorno.bautizado.fechaNacimiento = $('#fechaNacimiento').val();
+        });
+        $('#fechaBautismo').datetimepicker({
+            format: 'YYYY-MM-DD',
+            maxDate: moment().format("YYYY-MM-DD")
+        }).on('dp.change', function(e) {
+            entorno.bautizado.fechaBautismo = $('#fechaBautismo').val();
+        });
+        $("#ciudadNacimiento").chosen({
+            width: "100%"
+        }).change(function() {
+            entorno.bautizado.ciudadNacimiento = $('#ciudadNacimiento').val();
+        });
+        $("#celebrante").chosen({
+            width: "100%"
+        }).change(function() {
+            entorno.bautizado.celebrante = $('#celebrante').val();
+        });
+    }
+})
 $(document).ready(function() {
     console.log('Activo');
-    $('#btnEnviar').click(function() {
+    /*$('#btnEnviar').click(function() {
         $.ajax({
             url: 'http://127.0.0.1:8000/administracion/guardar-bautismo',
             type: 'post',
@@ -25,10 +101,10 @@ $(document).ready(function() {
             success: function(data) {
                 console.log(data);
             },
-            error:function(data){
-            	console.log(data);
-            	console.log(data.responseText);
+            error: function(data) {
+                console.log(data);
+                console.log(data.responseText);
             }
         });
-    });
+    });*/
 });

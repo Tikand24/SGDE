@@ -25,5 +25,9 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('bautismos', 'BautismosController@index');
 			Route::get('crear-bautismo', 'BautismosController@create');
 			Route::post('guardar-bautismo', 'BautismosController@guardar');
+			Route::get('cenizarios', 'CenizariosController@index');
+			Route::get('osarios', 'OsariosController@index');
+			Route::get('matrimonios', 'MatrimoniosController@index');
+			Route::get('confirmaciones', 'MatrimoniosController@index');
 		});
 });

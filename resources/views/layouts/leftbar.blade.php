@@ -32,22 +32,22 @@
             <a href="index.html"><i class="zmdi zmdi-home"></i> Inicio</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-face"></i> Bautismos</a>
+            <a href="/administracion/bautismos"><i class="zmdi zmdi-face"></i> Bautismos</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-local-library"></i> Comuniones</a>
+            <a href="/administracion/comuniones"><i class="zmdi zmdi-local-library"></i> Comuniones</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-graduation-cap"></i> Confirmaciones</a>
+            <a href="/administracion/confirmaciones"><i class="zmdi zmdi-graduation-cap"></i> Confirmaciones</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-local-wc"></i> Matrimonios</a>
+            <a href="/administracion/matrimonios"><i class="zmdi zmdi-local-wc"></i> Matrimonios</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-account-calendar"></i> Osarios</a>
+            <a href="/administracion/osarios"><i class="zmdi zmdi-account-calendar"></i> Osarios</a>
         </li>
         <li>
-            <a href="index.html"><i class="zmdi zmdi-account-calendar"></i> Cenizarios</a>
+            <a href="/administracion/cenizarios"><i class="zmdi zmdi-account-calendar"></i> Cenizarios</a>
         </li>
         <li>
             <a href="index.html"><i class="zmdi zmdi-account-calendar"></i> Defunciones</a>

@@ -5,9 +5,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" id="token" content="{{ csrf_token() }}"  value="{{ csrf_token() }}">
         <title>{{ config('app.name') }} - @yield('title') </title>
         <!-- Vendor CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/fullcalendar/dist/fullcalendar.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/animate.css/animate.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/sweetalert/dist/sweetalert.css') }}" rel="stylesheet">
@@ -18,7 +19,6 @@
         <link href="{{ asset('administracion/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/farbtastic/farbtastic.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/chosen/chosen.css') }}" rel="stylesheet">
-        <l
         <!-- CSS -->
         <link href="{{ asset('administracion/css/app_1.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/css/app_2.min.css') }}" rel="stylesheet">
@@ -141,6 +141,10 @@
         <![endif]-->
 
         <script src="{{ asset('administracion/js/app.js') }}"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="{{ asset('administracion/js/vueConfig.js') }}"></script>
         @yield('scripts')
     </body>
   </html>
