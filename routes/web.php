@@ -19,15 +19,40 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('/home', 'HomeController@index')->name('home');
-	Route::prefix('administracion')
+	Route::prefix('administracion/bautismos/')
 		->namespace('Administrativos')
 		->group(function () {
-			Route::get('bautismos', 'BautismosController@index');
+			Route::get('', 'BautismosController@index');
 			Route::get('crear-bautismo', 'BautismosController@create');
+			Route::get('partida/{id}/{firma}', 'BautismosController@reportePartida');
+			Route::get('borrador/{id}/{firma}', 'BautismosController@reporteBorrador');
 			Route::post('guardar-bautismo', 'BautismosController@guardar');
+			Route::get('celebrantes-parroquia', 'BautismosController@celebrantesParroquia');
+		});
+	Route::prefix('administracion/cenizarios/')
+		->namespace('Administrativos')
+		->group(function () {
 			Route::get('cenizarios', 'CenizariosController@index');
-			Route::get('osarios', 'OsariosController@index');
-			Route::get('matrimonios', 'MatrimoniosController@index');
-			Route::get('confirmaciones', 'MatrimoniosController@index');
+			Route::get('crear-cenizario', 'CenizariosController@create');
+			Route::post('guardar-cenizario', 'CenizariosController@guardar');
+		});
+	Route::prefix('administracion/osarios/')
+		->namespace('Administrativos')
+		->group(function () {
+			Route::get('', 'OsariosController@index');
+			Route::get('crear-osario', 'OsariosController@create');
+			Route::post('guardar-osario', 'OsariosController@guardar');
+		});
+	Route::prefix('administracion/matrimonios/')
+		->namespace('Administrativos')
+		->group(function () {
+			Route::get('', 'MatrimoniosController@index');
+			Route::get('crear-matrimonio', 'MatrimoniosController@create');
+			Route::post('guardar-matrimonio', 'MatrimoniosController@guardar');
+		});
+	Route::prefix('administracion/confirmaciones/')
+		->namespace('Administrativos')
+		->group(function () {
+			Route::get('', 'MatrimoniosController@index');
 		});
 });

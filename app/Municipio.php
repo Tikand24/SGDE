@@ -11,4 +11,7 @@ class Municipio extends Model {
 	public function Departamento() {
 		return $this->belongsTo('App\Departamento', 'cod_departamento');
 	}
+	public function Bautisado() {
+		return $this->hasMany('App\Bautisado');
+	}
 }
