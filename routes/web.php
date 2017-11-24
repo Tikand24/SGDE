@@ -28,6 +28,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('borrador/{id}/{firma}', 'BautismosController@reporteBorrador');
 			Route::post('guardar-bautismo', 'BautismosController@guardar');
 			Route::get('celebrantes-parroquia', 'BautismosController@celebrantesParroquia');
+			Route::post('editar', 'BautismosController@edit');
+			Route::post('buscar-bautizado', 'BautismosController@bautizadoPorId');
+			Route::post('actualizar-bautismo-decreto', 'BautismosController@actualizarPorDecreto');
+			Route::post('actualizar-bautismo-sistema', 'BautismosController@actualizarPorSistema');
 		});
 	Route::prefix('administracion/cenizarios/')
 		->namespace('Administrativos')
@@ -53,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::prefix('administracion/confirmaciones/')
 		->namespace('Administrativos')
 		->group(function () {
-			Route::get('', 'MatrimoniosController@index');
+			Route::get('', 'ConfirmacionesController@index');
+			Route::get('crear-confirmacion', 'ConfirmacionesController@create');
 		});
 });

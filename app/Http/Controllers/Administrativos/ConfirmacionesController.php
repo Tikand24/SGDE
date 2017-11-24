@@ -11,4 +11,7 @@ class ConfirmacionesController extends Controller {
 		$confirmaciones = Confirmacione::buscar($request->name)->orderBy('id', 'ASC')->paginate(50);
 		return view('administracion.confirmaciones.index')->with('confirmaciones', $confirmaciones);
 	}
+	public function create() {
+		return view('administracion.confirmaciones.create');
+	}
 }

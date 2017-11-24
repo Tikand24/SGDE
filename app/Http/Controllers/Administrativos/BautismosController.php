@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Administrativos;
 
 use App\Anotacione;
 use App\Bautisado;
+use App\CambiosSistema;
 use App\CelebParroquia;
 use App\Celebrante;
 use App\Http\Controllers\Controller;
@@ -22,7 +23,17 @@ class BautismosController extends Controller {
 		return view('administracion.bautismos.create')->with('municipios', $municipios)->with('celebrantes', $celebrante);
 	}
 	public function edit(Request $request) {
-
+		$municipios = Municipio::with(['Departamento'])->get();
+		$celebrante = Celebrante::all();
+		return view('administracion.bautismos.editar')->with('tipo', $request->tipoAnotacion)->with('bautismo', $request->bautizado)->with('municipios', $municipios)->with('celebrantes', $celebrante);
+	}
+	public function bautizadoPorId(Request $request) {
+		$datos = Bautisado::where('id', $request->id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();
+		$anotaciones = Anotacione::where('cod_bautisado', $request->id)->get();
+		return response()->json([
+			'bautizado' => $datos,
+			'anotaciones' => $anotaciones,
+		]);
 	}
 	public function ejemplo() {
 		$municipios = Municipio::with(['Departamento'])->get();
@@ -74,6 +85,74 @@ class BautismosController extends Controller {
 			return response()->json('Error');
 		}
 	}
+	public function actualizarPorDecreto(Request $request) {
+		try {
+			$bautismo = Bautisado::find($request->id);
+			$bautismo->nombre = $request->nombre;
+			$bautismo->libro = $request->libro;
+			$bautismo->folio = $request->folio;
+			$bautismo->partida = $request->partida;
+			$bautismo->nom_padre = $request->padre;
+			$bautismo->nom_madre = $request->madre;
+			$bautismo->abuelo_paterno = $request->abueloPaterno;
+			$bautismo->abuela_paterna = $request->abuelaPaterna;
+			$bautismo->abuelo_materno = $request->abueloMaterno;
+			$bautismo->abuela_materna = $request->abuelaMaterna;
+			$bautismo->nom_padrino = $request->padrino;
+			$bautismo->nom_madrina = $request->madrina;
+			$bautismo->fecha_nacimiento = $request->fechaNacimiento;
+			$bautismo->cod_ciudad_nac_baut = $request->ciudadNacimiento;
+			$bautismo->fecha_bautismo = $request->fechaBautismo;
+			$bautismo->cod_celebrante = $request->celebrante;
+			$bautismo->save();
+			$anotacion = new Anotacione();
+			$anotacion->cod_bautisado = $bautismo->id;
+			$anotacion->Anotacion = $request->anotacion;
+			$anotacion->save();
+			return response()->json([
+				'estado' => 'ok',
+				'tipo' => 'update',
+				'bautisado' => $bautismo->whereId($bautismo->id)->first(),
+			]);
+		} catch (Exception $e) {
+			return response()->json('Error');
+		}
+	}
+	public function actualizarPorSistema(Request $request) {
+		try {
+			$bautismo = Bautisado::find($request->id);
+			$bautismo->nombre = $request->nombre;
+			$bautismo->libro = $request->libro;
+			$bautismo->folio = $request->folio;
+			$bautismo->partida = $request->partida;
+			$bautismo->nom_padre = $request->padre;
+			$bautismo->nom_madre = $request->madre;
+			$bautismo->abuelo_paterno = $request->abueloPaterno;
+			$bautismo->abuela_paterna = $request->abuelaPaterna;
+			$bautismo->abuelo_materno = $request->abueloMaterno;
+			$bautismo->abuela_materna = $request->abuelaMaterna;
+			$bautismo->nom_padrino = $request->padrino;
+			$bautismo->nom_madrina = $request->madrina;
+			$bautismo->fecha_nacimiento = $request->fechaNacimiento;
+			$bautismo->cod_ciudad_nac_baut = $request->ciudadNacimiento;
+			$bautismo->fecha_bautismo = $request->fechaBautismo;
+			$bautismo->cod_celebrante = $request->celebrante;
+			$bautismo->save();
+			$cambioSistema = new CambiosSistema();
+			$cambioSistema->cambio_id = $bautismo->id;
+			$cambioSistema->tipo_cambio = 'Bautismos';
+			$cambioSistema->usuario_id = \Auth::user()->id;
+			$cambioSistema->descipcion_cambio = 'Actualizacion de registro de batuizado por sistema';
+			$cambioSistema->save();
+			return response()->json([
+				'estado' => 'ok',
+				'tipo' => 'update',
+				'bautisado' => $bautismo->whereId($bautismo->id)->first(),
+			]);
+		} catch (Exception $e) {
+			return response()->json('Error');
+		}
+	}
 	public function reportePartida($id, $firma) {
 		try {
 			$datos = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();
@@ -93,7 +172,11 @@ class BautismosController extends Controller {
 		try {
 			$datos = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante'])->first();
 			$anotaciones = Anotacione::where('cod_bautisado', $id)->get();
-			$pdf = \PDF::loadView('administracion.reportes.borrador', ['datos' => $datos, 'anotacion' => $anotaciones, 'valor' => $valor]);
+			if ($this->validarBorradorPDF($datos) == '') {
+				$pdf = \PDF::loadView('administracion.reportes.borrador', ['datos' => $datos, 'anotacion' => $anotaciones, 'valor' => $valor]);
+			} else {
+				$pdf = \PDF::loadView('administracion.reportes.error', ['mensaje' => $this->validarPartidaPDF($datos)]);
+			}
 			return $pdf->setPaper('letter', 'portrait')->stream('borrador.pdf');
 		} catch (Exception $e) {
 			echo $e->getMessage();
@@ -113,6 +196,30 @@ class BautismosController extends Controller {
 			$mensaje = 'Partida';
 			return $mensaje;
 		}
+		if ($bautizado->fecha_nacimiento == null) {
+			$mensaje = 'Fecha de nacimiento';
+			return $mensaje;
+		}
+		if ($bautizado->cod_ciudad_nac_baut == null) {
+			$mensaje = 'Ciudad de nacimiento';
+			return $mensaje;
+		}
+		if ($bautizado->fecha_bautismo == null) {
+			$mensaje = 'Fecha de bautismo';
+			return $mensaje;
+		}
+		if ($bautizado->cod_celebrante == null) {
+			$mensaje = 'Celebrante';
+			return $mensaje;
+		}
+		if ($bautizado->parroco_firma == null) {
+			$mensaje = 'Parroco';
+			return $mensaje;
+		}
+		return $mensaje;
+	}
+	protected function validarBorradorPDF($bautizado) {
+		$mensaje = '';
 		if ($bautizado->fecha_nacimiento == null) {
 			$mensaje = 'Fecha de nacimiento';
 			return $mensaje;

@@ -56,8 +56,9 @@
 									<td>
 										<a class="btn bgm-green" v-on:click="partida({{ $bautizo->id }})" data-toggle="tooltip" data-placement="top" title="Partida"><i class="zmdi zmdi-assignment-account"></i>
 										</a>
-
 										<a class="btn bgm-lightblue" v-on:click="borrador({{ $bautizo->id }})" data-toggle="tooltip" data-placement="top" title="Borrador"><i class="zmdi zmdi-assignment-alert"></i>
+										</a>
+										<a class="btn bgm-orange" v-on:click="editar({{ $bautizo->id }})" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit"></i>
 										</a>
 									</td>
 								</tr>
@@ -117,6 +118,49 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="seleccionarEdicion" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Seleccione tipo de edicion</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="text-center">
+							<label class="radio radio-inline m-r-20">
+                                <input type="radio" name="inlineRadioOptions" v-on:click="message=false;mostrarMensaje=true;" >
+                                <i class="input-helper"></i>
+                                Edicion por sistema
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" name="inlineRadioOptions" v-on:click="message=true;mostrarMensaje=true;" >
+                                <i class="input-helper"></i>
+                                Edicion por decreto
+                            </label>
+						</div>
+					</div>
+					<div class="row" v-show="mostrarMensaje">
+						<form action="" method="post" id="formSelect">
+							{{ csrf_field() }}
+							<input type="text" name="bautizado" v-model="bautizado" hidden="true">
+							<input type="text" name="tipoAnotacion" v-model="message">
+						</form>
+						<p v-if="message==false">
+							La edicion por sistema se podra usar cuando hay un error de digitacion por parte del usuario que creo el documento, esta correccion no generara una "Anotacion" por lo cual la correccion se vere reflejada en la partida pero no tendra una anotacion. Se almacenara que usuario realizo el cambio por sistema
+						</p>
+						<p v-if="message==true">
+							La edicion por decreto se usuara cuando el error encontrado es corregido siguiendo el proceso eclesiastico de la diosecis, esta correccion generara una "Anotacion" por lo cual tanto la correcion como el decreto se veran reflejados en la partida.
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" v-on:click="ordenEdit">Editar</button>
+					<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @endsection
 @section('scripts')
@@ -124,7 +168,8 @@
 	var app = new Vue({
 		el: '#app',
 		data: {
-			message: 'Hello Vue!',
+			mostrarMensaje:false,
+			message:'',
 			celebrantes:{},
 			firma:'',
 			bautizado:'',
@@ -139,6 +184,13 @@
 			borrador: function(id) {
 				this.bautizado=id;
 				$('#seleccionarValor').modal('show');
+			},
+			editar:function (id) {
+				this.bautizado=id;
+				$('#seleccionarEdicion').modal('show');
+			},
+			ordenEdit:function(){
+				$('#formSelect').attr('action','/administracion/bautismos/editar').submit();
 			},
 			complementos:function(){
 				this.$http.get('/administracion/bautismos/celebrantes-parroquia').then((response) => {
