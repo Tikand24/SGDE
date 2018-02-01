@@ -110,7 +110,7 @@
 			</div>
 			<div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-6">
-					<label>Fecha de bautismo</label>
+					<label>Fecha de bautizo</label>
 					<div class="input-group form-group">
 						<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
 						<div class="dtp-container">

@@ -7,13 +7,13 @@
 	<div class="block-header">
 		<h2>Confirmaciones</h2>
 	</div>
-	<div class="card">
+	<div class="card" id="app">
 		<div class="card-header">
 			<h2>Registros de Confirmaciones
 			</h2>
 			<div class="row justify-content-between">
 				<div class="col-md-4">
-					<h3><a href="" class="btn btn-success">Crear una confirmacion</a></h3>
+					<h3><a href="{{ url('administracion/confirmaciones/crear-confirmacion') }}" class="btn btn-success">Crear una confirmacion</a></h3>
 				</div>
 				<div class="col-md-4 col-md-offset-4">
 					<form action="">
@@ -51,7 +51,14 @@
 									<td>{{ $confirmacion->libro }}</td>
 									<td>{{ $confirmacion->folio }}</td>
 									<td>{{ $confirmacion->partida }}</td>
-									<td><button class="btn"></button></td>
+									<td>
+										<a class="btn bgm-green" v-on:click="partida({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Partida"><i class="zmdi zmdi-assignment-account"></i>
+										</a>
+										<a class="btn bgm-lightblue" v-on:click="borrador({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Borrador"><i class="zmdi zmdi-assignment-alert"></i>
+										</a>
+										<a class="btn bgm-orange" v-on:click="editar({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit"></i>
+										</a>
+									</td>
 								</tr>
 								@endforeach
 							</tbody>
@@ -61,6 +68,131 @@
 				</div>
 			</div>
 		</div>
+
+	<div class="modal fade" id="seleccionarEdicion" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Seleccione tipo de edicion</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="text-center">
+							<label class="radio radio-inline m-r-20">
+                                <input type="radio" name="inlineRadioOptions" v-on:click="message=false;mostrarMensaje=true;" >
+                                <i class="input-helper"></i>
+                                Edicion por sistema
+                            </label>
+                            <label class="radio radio-inline m-r-20">
+                                <input type="radio" name="inlineRadioOptions" v-on:click="message=true;mostrarMensaje=true;" >
+                                <i class="input-helper"></i>
+                                Edicion por decreto
+                            </label>
+						</div>
+					</div>
+					<div class="row" v-show="mostrarMensaje">
+						<form action="" method="post" id="formSelect">
+							{{ csrf_field() }}
+							<input type="text" name="confirmado" v-model="confirmado" hidden="true">
+							<input type="text" name="tipoAnotacion" v-model="message"  hidden="true">
+						</form>
+						<p v-if="message==false">
+							La edicion por sistema se podra usar cuando hay un error de digitacion por parte del usuario que creo el documento, esta correccion no generara una "Anotacion" por lo cual la correccion se vere reflejada en la partida pero no tendra una anotacion. Se almacenara que usuario realizo el cambio por sistema
+						</p>
+						<p v-if="message==true">
+							La edicion por decreto se usuara cuando el error encontrado es corregido siguiendo el proceso eclesiastico de la diosecis, esta correccion generara una "Anotacion" por lo cual tanto la correcion como el decreto se veran reflejados en la partida.
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" v-on:click="ordenEdit">Editar</button>
+					<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+<script type="text/javascript">
+	var app = new Vue({
+		el: '#app',
+		data: {
+			mostrarMensaje:false,
+			message:'',
+			celebrantes:{},
+			firma:'',
+			confirmado:'',
+			ofrenda:'30000'
+		},
+		methods: {
+			partida: function(id) {
+				$("#celebrantes").trigger("chosen:updated");
+				this.confirmado=id;
+				$('#seleccionarFirma').modal('show');
+			},
+			borrador: function(id) {
+				this.confirmado=id;
+				$('#seleccionarValor').modal('show');
+			},
+			editar:function (id) {
+				this.confirmado=id;
+				$('#seleccionarEdicion').modal('show');
+			},
+			ordenEdit:function(){
+				$('#formSelect').attr('action','/administracion/confirmaciones/editar').submit();
+			},
+			complementos:function(){
+				this.$http.get('/administracion/confirmaciones/celebrantes-parroquia').then((response) => {
+					this.celebrantes=response.body;
+					$("#celebrantes").trigger("chosen:updated");
+				}, (error) => {
+					toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
+				});
+			},
+			generarPartida:function(){
+				if (this.confirmado.length==0) {
+					toastr.warning('Seleccione una persona para generar la partida');
+					return;
+				}
+				if (this.firma.length==0) {
+					toastr.warning('Seleccione una persona para la firma de la partida');
+					return
+				}
+				window.open("/administracion/confirmaciones/partida/"+this.confirmado+"/"+this.firma);
+			},
+			generarBorrador:function(){
+				if (this.confirmado.length==0) {
+					toastr.warning('Seleccione una persona para generar la partida');
+					return;
+				}
+				if (this.ofrenda.length==0) {
+					toastr.warning('Seleccione la ofrenda del bautizo');
+					return
+				}
+				window.open("/administracion/confirmaciones/borrador/"+this.confirmado+"/"+this.ofrenda);
+			},
+			formReset:function(){
+				this.firma='';
+				this.confirmado='';
+				this.ofrenda='30000';
+				$('#celebrantes').val('').prop('selected',true);
+			}
+		},
+		mounted() {
+			entorno = this;
+			entorno.complementos();
+			$("#celebrantes").chosen({
+				width: "100%"
+			}).change(function() {
+				entorno.firma = $('#celebrantes').val();
+			});
+			$('#seleccionarFirma').on('hide.bs.modal', function (e){
+				entorno.formReset();
+			});
+		}
+	});
+</script>
 @endsection

@@ -14,4 +14,7 @@ class Municipio extends Model {
 	public function Bautisado() {
 		return $this->hasMany('App\Bautisado');
 	}
+	public function Parroquias() {
+		return $this->hasMany('App\Parroquia');
+	}
 }

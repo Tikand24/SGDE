@@ -143,7 +143,7 @@
 						<form action="" method="post" id="formSelect">
 							{{ csrf_field() }}
 							<input type="text" name="bautizado" v-model="bautizado" hidden="true">
-							<input type="text" name="tipoAnotacion" v-model="message">
+							<input type="text" name="tipoAnotacion" v-model="message"  hidden="true">
 						</form>
 						<p v-if="message==false">
 							La edicion por sistema se podra usar cuando hay un error de digitacion por parte del usuario que creo el documento, esta correccion no generara una "Anotacion" por lo cual la correccion se vere reflejada en la partida pero no tendra una anotacion. Se almacenara que usuario realizo el cambio por sistema

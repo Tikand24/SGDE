@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('buscar-bautizado', 'BautismosController@bautizadoPorId');
 			Route::post('actualizar-bautismo-decreto', 'BautismosController@actualizarPorDecreto');
 			Route::post('actualizar-bautismo-sistema', 'BautismosController@actualizarPorSistema');
+			Route::post('eliminar-anotacion', 'BautismosController@eliminarAnotacion');
 		});
 	Route::prefix('administracion/cenizarios/')
 		->namespace('Administrativos')
@@ -59,5 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
 		->group(function () {
 			Route::get('', 'ConfirmacionesController@index');
 			Route::get('crear-confirmacion', 'ConfirmacionesController@create');
+			Route::get('complementos', 'ConfirmacionesController@complementosCreate');
+			Route::post('buscar-grupo-confirmacion', 'ConfirmacionesController@buscarGrupoConfirmacion');
 		});
 });

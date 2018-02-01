@@ -27,6 +27,9 @@ var app = new Vue({
     methods: {
         guardar: function() {
             if (this.tipoEdicion == 'true') {
+                if (this.bautizado.anotacion.length == 0) {
+                    toastr.warning('La anotacion de la edicion es requerida');
+                }
                 this.$http.post('/administracion/bautismos/actualizar-bautismo-decreto', this.bautizado).then((response) => {
                     if (response.body.estado == 'validador') {
                         jQuery.each(response.body.errors, function(i, value) {
@@ -112,6 +115,31 @@ var app = new Vue({
             }, (error) => {
                 toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
             });
+        },
+        eliminarAnotacion(data, index) {
+            swal({
+                title: "¿Desea eliminar la anotacion?",
+                text: "La anotacion se eliminara y no se podra recuperar",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Eliminar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    this.$http.post('/administracion/bautismos/eliminar-anotacion', {
+                        id: data.id
+                    }).then((response) => {
+                        if (response.body.estado=='') {}
+                    }, (error) => {
+                        toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
+                    });
+                    swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                }
+            });
+            console.log(data.id);
         }
     },
     mounted() {

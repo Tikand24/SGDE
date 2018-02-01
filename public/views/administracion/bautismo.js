@@ -24,21 +24,37 @@ var app = new Vue({
     },
     methods: {
         guardar: function() {
-            this.$http.post('/administracion/bautismos/guardar-bautismo',this.bautizado).then((response) => {
+            if (this.nombre.length == 0) {
+                toastr.warning('El nombre del bautisado es requerido');
+                return
+            }
+            if (this.padrino.length == 0 && this.madrina.length == 0) {
+                toastr.warning('Digite el nombre del padrino o madrina');
+                return
+            }
+            if (this.fechaNacimiento.length == 0 ) {
+                toastr.warning('Seleccione la fecha de nacimiento');
+                return
+            }
+            if (this.fechaBautismo.length == 0 ) {
+                toastr.warning('Seleccione la fecha de bautizo');
+                return
+            }
+            this.$http.post('/administracion/bautismos/guardar-bautismo', this.bautizado).then((response) => {
                 if (response.body.estado == 'validador') {
-                        jQuery.each(response.body.errors, function(i, value) {
-                            toastr.warning(value)
-                        })
-                    } else {
-                        if (response.body.estado == 'ok') {
-                            if (response.body.tipo == 'update') {
-                                toastr.success('Paciente actualizado correctamente');
-                            }
-                            if (response.body.tipo == 'save') {
-                                toastr.success('Paciente creado correctamente');
-                            }
+                    jQuery.each(response.body.errors, function(i, value) {
+                        toastr.warning(value)
+                    })
+                } else {
+                    if (response.body.estado == 'ok') {
+                        if (response.body.tipo == 'update') {
+                            toastr.success('Paciente actualizado correctamente');
+                        }
+                        if (response.body.tipo == 'save') {
+                            toastr.success('Paciente creado correctamente');
                         }
                     }
+                }
                 console.log('Bien');
                 console.log(response.body);
             }, (error) => {

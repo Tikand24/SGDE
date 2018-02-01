@@ -153,6 +153,19 @@ class BautismosController extends Controller {
 			return response()->json('Error');
 		}
 	}
+	public function eliminarAnotacion(Request $request)
+	{
+		try {
+			$anotacion = Anotacione::find($request->id);
+			$anotacion->delete();
+			return response()->json([
+				'estado' => 'ok',
+				'tipo' => 'delete'
+			]);
+		} catch (Exception $e) {
+			return response()->json('Error');
+		}
+	}
 	public function reportePartida($id, $firma) {
 		try {
 			$datos = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();

@@ -17,4 +17,7 @@ class Celebrante extends Model {
 	public function BautisadoParroco() {
 		return $this->hasMany('App\Bautisado');
 	}
+	public function GruposConfirmaciones() {
+		return $this->hasMany('App\GruposConfirmacione');
+	}
 }
