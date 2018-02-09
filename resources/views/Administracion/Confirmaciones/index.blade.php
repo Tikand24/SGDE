@@ -54,8 +54,6 @@
 									<td>
 										<a class="btn bgm-green" v-on:click="partida({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Partida"><i class="zmdi zmdi-assignment-account"></i>
 										</a>
-										<a class="btn bgm-lightblue" v-on:click="borrador({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Borrador"><i class="zmdi zmdi-assignment-alert"></i>
-										</a>
 										<a class="btn bgm-orange" v-on:click="editar({{ $confirmacion->id }})" data-toggle="tooltip" data-placement="top" title="Editar"><i class="zmdi zmdi-edit"></i>
 										</a>
 									</td>
@@ -69,6 +67,31 @@
 			</div>
 		</div>
 
+	<div class="modal fade" id="seleccionarFirma" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Seleccion de la persona que firma</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 col-md-6 col-lg-6">
+							<label>Quien firma</label>
+							<select class="chosen" data-placeholder="Seleccione un celebrante..."  id="celebrantes" >
+								<option disabled selected value="">Seleccione</option>
+								<option v-for="(celeb,index) in celebrantes" v-bind:value="celeb.id">@{{ celeb.celebrante.nom_celebrante }} - @{{ celeb.cargo }}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" v-on:click="generarPartida">Generar</button>
+					<button type="button" class="btn btn-link" data-dismiss="modal">Cerrar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" id="seleccionarEdicion" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -94,10 +117,10 @@
 						<form action="" method="post" id="formSelect">
 							{{ csrf_field() }}
 							<input type="text" name="confirmado" v-model="confirmado" hidden="true">
-							<input type="text" name="tipoAnotacion" v-model="message"  hidden="true">
+							<input type="text" name="tipoEdicion" v-model="message"  hidden="true">
 						</form>
 						<p v-if="message==false">
-							La edicion por sistema se podra usar cuando hay un error de digitacion por parte del usuario que creo el documento, esta correccion no generara una "Anotacion" por lo cual la correccion se vere reflejada en la partida pero no tendra una anotacion. Se almacenara que usuario realizo el cambio por sistema
+							La edicion por sistema se podra usar cuando hay un error de digitacion por parte del usuario que creo el documento, esta correccion no generara una "Anotacion" por lo cual la correccion se vera reflejada en la partida pero no tendra una anotacion. Se almacenara que usuario realizo el cambio por sistema
 						</p>
 						<p v-if="message==true">
 							La edicion por decreto se usuara cuando el error encontrado es corregido siguiendo el proceso eclesiastico de la diosecis, esta correccion generara una "Anotacion" por lo cual tanto la correcion como el decreto se veran reflejados en la partida.
@@ -139,13 +162,14 @@
 			},
 			editar:function (id) {
 				this.confirmado=id;
+				console.log(this.confirmado);
 				$('#seleccionarEdicion').modal('show');
 			},
 			ordenEdit:function(){
 				$('#formSelect').attr('action','/administracion/confirmaciones/editar').submit();
 			},
 			complementos:function(){
-				this.$http.get('/administracion/confirmaciones/celebrantes-parroquia').then((response) => {
+				this.$http.get('/administracion/bautismos/celebrantes-parroquia').then((response) => {
 					this.celebrantes=response.body;
 					$("#celebrantes").trigger("chosen:updated");
 				}, (error) => {

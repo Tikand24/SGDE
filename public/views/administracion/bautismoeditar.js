@@ -117,6 +117,7 @@ var app = new Vue({
             });
         },
         eliminarAnotacion(data, index) {
+            entorno = this;
             swal({
                 title: "¿Desea eliminar la anotacion?",
                 text: "La anotacion se eliminara y no se podra recuperar",
@@ -129,10 +130,16 @@ var app = new Vue({
                 closeOnCancel: false
             }, function(isConfirm) {
                 if (isConfirm) {
-                    this.$http.post('/administracion/bautismos/eliminar-anotacion', {
+                    entorno.$http.post('/administracion/bautismos/eliminar-anotacion', {
                         id: data.id
                     }).then((response) => {
-                        if (response.body.estado=='') {}
+                            if (response.body.estado=='ok') {
+                                if (response.body.tipo=='delete') {
+                                    entorno.bautizado.anotaciones.splice(index,1);
+                                    swal("Eliminado", "La anotacion se elimino correctamente", "success");
+                                    return
+                                }                                   
+                            }
                     }, (error) => {
                         toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
                     });

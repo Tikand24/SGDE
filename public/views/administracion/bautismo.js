@@ -48,10 +48,10 @@ var app = new Vue({
                 } else {
                     if (response.body.estado == 'ok') {
                         if (response.body.tipo == 'update') {
-                            toastr.success('Paciente actualizado correctamente');
+                            toastr.success('Bautizado actualizado correctamente');
                         }
                         if (response.body.tipo == 'save') {
-                            toastr.success('Paciente creado correctamente');
+                            toastr.success('Bautizado creado correctamente');
                         }
                     }
                 }

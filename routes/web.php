@@ -62,5 +62,11 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('crear-confirmacion', 'ConfirmacionesController@create');
 			Route::get('complementos', 'ConfirmacionesController@complementosCreate');
 			Route::post('buscar-grupo-confirmacion', 'ConfirmacionesController@buscarGrupoConfirmacion');
+			Route::post('guardar-confirmacion', 'ConfirmacionesController@guardar');
+			Route::post('editar', 'ConfirmacionesController@edit');
+			Route::post('confirmado-editar', 'ConfirmacionesController@confirmadoEditar');
+			Route::post('actualizar-confirmacion', 'ConfirmacionesController@updated');
+			Route::post('eliminar-anotacion', 'ConfirmacionesController@eliminarAnotacion');
+			Route::get('partida/{id}/{firma}', 'ConfirmacionesController@reportePartida');
 		});
 });

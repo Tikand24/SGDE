@@ -118,65 +118,17 @@ $yhoy = date('Y');
 	</pre>
 	<p id="nombre"><strong>{{ $datos->nombre }}</strong></p>
 	<div id="textoPrinc">
-		En la parroquia de la Sagrada Familia de Fusagasugá a los {{ $diaBautizo }} días del mes de  {{ $mesBautizo }} de  {{ $yearBautizo }} Fue bautizado: <strong>{{ $datos->nombre }}</strong> nacido en {{ $datos->municipio->nom_municipio }}-{{ $datos->municipio->departamento->nom_departamento }} el  {{$diaNacimiento}} de  {{$mesNacimiento}} de  {{$yearNacimiento}}.
+		{{ $datos->GrupoConfirmacion->descripcion_partida }} <strong>{{ $datos->nombre }}</strong>  
 	</div>
 	<div class="justify-text">
 	<div>
-		<strong>Padres:</strong>
-		@if ($datos->nom_padre==null)
-		{{ $datos->nom_madre }}
-		@else
-		@if ($datos->nom_madre==null)
-		{{ $datos->nom_padre }}
-		@else
-		{{ $datos->nom_padre }} - {{ $datos->nom_madre }}
-		@endif
-		@endif
-	</div>
-	<div>
-		<strong>Abuelos Paternos:</strong>
-		@if ($datos->abuelo_paterno==null)
-		{{ $datos->abuela_paterna }}
-		@else
-		@if ($datos->abuela_paterna==null)
-		{{ $datos->abuelo_paterno }}
-		@else
-		{{ $datos->abuelo_paterno }} - {{ $datos->abuela_paterna }}
-		@endif
-		@endif
-	</div>
-	<div>
-		<strong>Abuelos Maternos:</strong>
-		@if ($datos->abuelo_materno==null)
-		{{ $datos->abuela_materna }}
-		@else
-		@if ($datos->abuela_materna==null)
-		{{ $datos->abuelo_materno }}
-		@else
-		{{ $datos->abuelo_materno }} - {{ $datos->abuela_materna }}
-		@endif
-		@endif
-	</div>
-	<div>
-		<strong>Padrinos:</strong>
-		@if ($datos->nom_padrino==null)
-		{{ $datos->nom_madrina }}
-		@else
-		@if ($datos->nom_madrina==null)
-		{{ $datos->nom_padrino }}
-		@else
-		{{ $datos->nom_padrino }} - {{ $datos->nom_madrina }}
-		@endif
-		@endif
-	</div>
-	<div>
-		<strong>Doy fe:</strong> {{ $datos->CelebranteParroquia->nom_celebrante }} - {{ $datos->CelebranteParroquia->cod_cargo_cel }}
+		<strong>Doy fe:</strong> {{ $datos->GrupoConfirmacion->CelebranteParroquia->Celebrante->nom_celebrante }} - {{ $datos->GrupoConfirmacion->CelebranteParroquia->Celebrante->cod_cargo_cel }}
 	</div>
 	</div>
 	@if (count($anotacion)>0)
 	<p>
 	@foreach ($anotacion as $anot)
-			<strong>Anotación:</strong> {{ $anot->Anotacion }}<br>
+			<strong>Anotación:</strong> {{ $anot->anotacion }}<br>
 		@endforeach
 		</p>
 	@else

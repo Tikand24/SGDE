@@ -166,7 +166,7 @@
 						<h2><small>Anotacion #@{{index+1}}</small></h2>
 						<ul class="actions">
 							<li>
-								<a v-on:click="eliminarAnotacion(anotacion)">
+								<a v-on:click="eliminarAnotacion(anotacion,index)">
 									<i class="zmdi zmdi-tag-close"></i>
 								</a>
 							</li>

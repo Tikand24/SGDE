@@ -9,7 +9,11 @@ class GruposConfirmacione extends Model {
 		return $query->where('nombre', 'like', '%' . $data . '%')
 			->orWhere('fecha', 'like', '%' . $data . '%');
 	}
-	public function Celebrante() {
-		return $this->belongsTo('App\Celebrante','celebrante_id');
+	public function CelebranteParroquia() {
+		return $this->belongsTo('App\CelebParroquia','celebrante_parroquia_id');
+	}
+	public function Confirmaciones()
+	{
+		return $this->hasMany('App\Confirmacione');
 	}
 }
