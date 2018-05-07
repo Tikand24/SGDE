@@ -56,6 +56,12 @@ $yearNacimiento = date_format($date, "Y");
 $dhoy = date('d');
 $mhoy = mes(strftime('%B'));
 $yhoy = date('Y');
+$tipHijo="hijo";
+$tipBautizado="Batizado";
+if ($datos->genero=="Femenino") {
+	$tipHijo="hija";
+	$tipBautizado="Batizada";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -118,7 +124,24 @@ $yhoy = date('Y');
 	</pre>
 	<p id="nombre"><strong>{{ $datos->nombre }}</strong></p>
 	<div id="textoPrinc">
-		{{ $datos->GrupoConfirmacion->descripcion_partida }} <strong>{{ $datos->nombre }}</strong>  
+		{{ $datos->GrupoConfirmacion->descripcion_partida }} <strong>{{ $datos->nombre }}</strong>  {{ $tipHijo }} de 
+		@if ($datos->madre!="" && $datos->padre!="")
+			{{ $datos->padre }} y {{ $datos->madre }}.
+		@else
+			@if ($datos->padre!="")
+				{{ $datos->padre }}.
+			@endif
+			@if ($datos->madre!="")
+				{{ $datos->madre }}.
+			@endif
+		@endif
+		{{ $tipBautizado }} en la {{ $datos->parroquia->nombre }} de {{ $datos->parroquia->municipio->nom_municipio }}-{{ $datos->parroquia->municipio->departamento->nom_departamento }} libro: {{ $datos->lib_baut }} folio: {{ $datos->fol_baut }} partida: {{ $datos->part_baut }}. 
+		@if ($datos->padrino!="")
+			Padrino: {{ $datos->padrino }}. 
+		@endif
+		@if ($datos->madrina!="")
+			Madrina: {{ $datos->madrina }}. 
+		@endif
 	</div>
 	<div class="justify-text">
 	<div>

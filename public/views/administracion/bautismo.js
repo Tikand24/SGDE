@@ -16,6 +16,7 @@ var app = new Vue({
             abuelaMaterna: '',
             padrino: '',
             madrina: '',
+            genero:'',
             fechaNacimiento: '',
             ciudadNacimiento: '',
             fechaBautismo: '',
@@ -24,19 +25,24 @@ var app = new Vue({
     },
     methods: {
         guardar: function() {
-            if (this.nombre.length == 0) {
+            if (this.bautizado.nombre.length == 0) {
                 toastr.warning('El nombre del bautisado es requerido');
                 return
             }
-            if (this.padrino.length == 0 && this.madrina.length == 0) {
+            if (this.bautizado.padrino.length == 0 && this.madrina.length == 0) {
                 toastr.warning('Digite el nombre del padrino o madrina');
                 return
             }
-            if (this.fechaNacimiento.length == 0 ) {
+            if (this.bautizado.genero.length==0) {
+                toastr.warning('Seleccione un genero');
+                return
+
+            }
+            if (this.bautizado.fechaNacimiento.length == 0 ) {
                 toastr.warning('Seleccione la fecha de nacimiento');
                 return
             }
-            if (this.fechaBautismo.length == 0 ) {
+            if (this.bautizado.fechaBautismo.length == 0 ) {
                 toastr.warning('Seleccione la fecha de bautizo');
                 return
             }
@@ -88,5 +94,11 @@ var app = new Vue({
         }).change(function() {
             entorno.bautizado.celebrante = $('#celebrante').val();
         });
+        $("#genero").chosen({
+            width: "100%"
+        }).change(function() {
+            entorno.bautizado.genero = $('#genero').val();
+        });
+
     }
 });

@@ -10,4 +10,8 @@ class Cenizario extends Model {
 			->orWhere('COMPRADOR_CENIZARIO', 'like', '%' . $data . '%')
 			->orWhere('FALLECIDO_CENIZARIO', 'like', '%' . $data . '%');
 	}
+	public function Municipio()
+	{
+		return $this->belongsTo('App\Municipio','ciudad_expedicion_id');
+	}
 }

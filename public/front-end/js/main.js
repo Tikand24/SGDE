@@ -32,10 +32,13 @@ jQuery(function($) {
 		});
 
 		// Sliders Init
-		$('.owl-schedule').owlCarousel({
+		/*$('.owl-schedule').owlCarousel({
 			singleItem: true,
-			pagination: true
-		});
+			pagination: false,
+			autoPlay:5000,
+			stopOnHover:true,
+			autoHeight:true
+		});*/
 		$('.owl-testimonials').owlCarousel({
 			singleItem: true,
 			pagination: true
@@ -162,7 +165,16 @@ jQuery(function($) {
 
 	$('.modal-popup .close-link').click(function(event){
 		event.preventDefault();
+		console.log('cerrar');
 		$('#modal1').modal('hide');
+		$('#modalMensaje').modal('hide');
+		$('#modalRegistro').modal('hide');
+		$('#modalMasInfoEucaristias').modal('hide');
+		$('#modalMasInfoBautismos').modal('hide');
+		$('#modalMasInfoMatrimonios').modal('hide');
+		$('#modalMasInfoOsarios').modal('hide');
+		$('#modalMasInfoCenizarios').modal('hide');
+		$('#masInfoDespacho').modal('hide');
 	});
 
 	$(window).on("resize", function() {

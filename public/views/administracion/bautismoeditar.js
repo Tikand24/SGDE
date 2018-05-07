@@ -16,6 +16,7 @@ var app = new Vue({
             abuelaMaterna: '',
             padrino: '',
             madrina: '',
+            genero:'',
             fechaNacimiento: '',
             ciudadNacimiento: '',
             fechaBautismo: '',
@@ -101,6 +102,7 @@ var app = new Vue({
                     abuelaMaterna: response.body.bautizado.abuela_materna,
                     padrino: response.body.bautizado.nom_padrino,
                     madrina: response.body.bautizado.nom_madrina,
+                    genero: response.body.bautizado.genero,
                     fechaNacimiento: response.body.bautizado.fecha_nacimiento,
                     ciudadNacimiento: response.body.bautizado.cod_ciudad_nac_baut,
                     fechaBautismo: response.body.bautizado.fecha_bautismo,
@@ -110,8 +112,10 @@ var app = new Vue({
 
                 $('#celebrante').val(response.body.bautizado.cod_celebrante).prop('selected', true);
                 $('#ciudadNacimiento').val(response.body.bautizado.cod_ciudad_nac_baut).prop('selected', true);
+                $('#genero').val(response.body.bautizado.genero).prop('selected', true);
                 $("#ciudadNacimiento").trigger("chosen:updated");
                 $("#celebrante").trigger("chosen:updated");
+                $("#genero").trigger("chosen:updated");
             }, (error) => {
                 toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
             });
@@ -127,7 +131,7 @@ var app = new Vue({
                 confirmButtonText: "Eliminar",
                 cancelButtonText: "Cancelar",
                 closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnCancel: true
             }, function(isConfirm) {
                 if (isConfirm) {
                     entorno.$http.post('/administracion/bautismos/eliminar-anotacion', {
@@ -174,6 +178,11 @@ var app = new Vue({
             width: "100%"
         }).change(function() {
             entorno.bautizado.celebrante = $('#celebrante').val();
+        });
+        $("#genero").chosen({
+            width: "100%"
+        }).change(function() {
+            entorno.bautizado.genero = $('#genero').val();
         });
     }
 });

@@ -58,6 +58,14 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<label>Genero</label>
+					<select class="chosen" data-placeholder="Seleccione un genero..."  id="generoSelect" v-model="confirmado.genero">
+						<option v-for="genero in complementos.generos" v-bind:value="genero">@{{ genero }}</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-sm-12 col-md-12 col-lg-12 m-b-25">
 					<label>Parroquia bautizado</label>
 					<select class="chosen" data-placeholder="Seleccione una parroquia" id="selectParroquiaBautizado">
@@ -247,7 +255,8 @@
 			},
 			complementos:{
 				parroquias:[],
-				gruposConfirmacion:[]
+				gruposConfirmacion:[],
+				generos:[]
 			},
 			confirmado:{
 				id:'',
@@ -259,6 +268,7 @@
 				padre:'',
 				padrino:'',
 				madrina:'',
+				genero:'',
 				parroquiaBautizado:'',
 				libroBautismo:'',
 				folioBautismo:'',
@@ -301,18 +311,22 @@
 						return
 					}
 				}
+				if (this.confirmado.genero.length==0) {
+						toastr.warning('El genero del confirmado es requerido');
+						return
+				}
 				this.$http.post('/administracion/confirmaciones/actualizar-confirmacion',this.confirmado).then((response) => {
 					if (response.body.estado == 'validador') {
-                    jQuery.each(response.body.errors, function(i, value) {
-                        toastr.warning(value)
-                    })
-                } else {
-                    if (response.body.estado == 'ok') {
-                        if (response.body.tipo == 'update') {
-                            toastr.success('Confirmado a ctualizado correctamente');
-                        }
-                    }
-                }
+	                    jQuery.each(response.body.errors, function(i, value) {
+	                        toastr.warning(value)
+	                    })
+	                } else {
+	                    if (response.body.estado == 'ok') {
+	                        if (response.body.tipo == 'update') {
+	                            toastr.success('Confirmado a ctualizado correctamente');
+	                        }
+	                    }
+	                }
 				}, (error) => {
 					console.log(error);
 					toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
@@ -321,6 +335,7 @@
 			getComplementos:function(){
 				this.$http.get('/administracion/confirmaciones/complementos').then((response) => {
 					this.complementos.parroquias=response.body.parroquias;
+					this.complementos.generos=response.body.generos;
 				}, (error) => {
 					console.log(error);
 					toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
@@ -343,6 +358,7 @@
 						padre:response.body.confirmacion.padre,
 						padrino:response.body.confirmacion.padrino,
 						madrina:response.body.confirmacion.madrino,
+						genero:response.body.confirmacion.genero,
 						parroquiaBautizado:response.body.confirmacion.parroquia_baut_id,
 						libroBautismo:response.body.confirmacion.lib_baut,
 						folioBautismo:response.body.confirmacion.fol_baut,
@@ -359,6 +375,7 @@
 						tipoEdicion:this.confirmado.tipoEdicion
 					};
 					$('#selectParroquiaBautizado option[value="'+this.confirmado.parroquiaBautizado+'"]').prop('selected',true);
+					$('#generoSelect option[value="'+this.confirmado.genero+'"]').prop('selected',true);
 				}, (error) => {
 					console.log(error);
 					toastr.error(error.status + ' ' + error.statusText + ' (' + error.url + ')');
@@ -398,7 +415,7 @@
 	                confirmButtonText: "Eliminar",
 	                cancelButtonText: "Cancelar",
 	                closeOnConfirm: false,
-	                closeOnCancel: false
+	                closeOnCancel: true
 	            }, function(isConfirm) {
 	                if (isConfirm) {
 	                    entorno.$http.post('/administracion/confirmaciones/eliminar-anotacion', data).then((response) => {
@@ -428,9 +445,15 @@
 			}).change(function() {
 				entorno.confirmado.parroquiaBautizado = $('#selectParroquiaBautizado').val();
 			});
+			$("#generoSelect").chosen({
+				width: "100%"
+			}).change(function() {
+				entorno.confirmado.genero = $('#generoSelect').val();
+			});
 		},
 		updated: function(){
 			$("#selectParroquiaBautizado").trigger("chosen:updated");
+			$("#generoSelect").trigger("chosen:updated");
 		}
 	});
 </script>

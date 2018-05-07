@@ -10,4 +10,8 @@ class Osario extends Model {
 			->orWhere('COMPRADOR_OSARIO', 'like', '%' . $data . '%')
 			->orWhere('FALLECIDO_OSARIO', 'like', '%' . $data . '%');
 	}
+	public function Municipio()
+	{
+		return $this->belongsTo('App\Municipio','ciudad_expedicion_id');
+	}
 }

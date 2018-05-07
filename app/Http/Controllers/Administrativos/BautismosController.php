@@ -10,9 +10,11 @@ use App\Celebrante;
 use App\Http\Controllers\Controller;
 use App\Municipio;
 use Illuminate\Http\Request;
+use App\Http\Helpers\EnumsTrait;
 use Validator;
 
 class BautismosController extends Controller {
+	use EnumsTrait;
 	public function index(Request $request) {
 		$batuismos = Bautisado::buscar($request->name)->orderBy('id', 'DESC')->paginate(50);
 		return view('administracion.bautismos.index')->with('bautizados', $batuismos);
@@ -20,12 +22,14 @@ class BautismosController extends Controller {
 	public function create() {
 		$municipios = Municipio::with(['Departamento'])->get();
 		$celebrante = Celebrante::all();
-		return view('administracion.bautismos.create')->with('municipios', $municipios)->with('celebrantes', $celebrante);
+		$generos=$this->getEnumValues('bautisados', 'genero');
+		return view('administracion.bautismos.create')->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos',$generos);
 	}
 	public function edit(Request $request) {
 		$municipios = Municipio::with(['Departamento'])->get();
 		$celebrante = Celebrante::all();
-		return view('administracion.bautismos.editar')->with('tipo', $request->tipoAnotacion)->with('bautismo', $request->bautizado)->with('municipios', $municipios)->with('celebrantes', $celebrante);
+		$generos=$this->getEnumValues('bautisados', 'genero');
+		return view('administracion.bautismos.editar')->with('tipo', $request->tipoAnotacion)->with('bautismo', $request->bautizado)->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos',$generos);
 	}
 	public function bautizadoPorId(Request $request) {
 		$datos = Bautisado::where('id', $request->id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();
@@ -70,6 +74,7 @@ class BautismosController extends Controller {
 			$bautismo->abuela_materna = $request->abuelaMaterna;
 			$bautismo->nom_padrino = $request->padrino;
 			$bautismo->nom_madrina = $request->madrina;
+			$bautismo->genero = $request->genero;
 			$bautismo->fecha_nacimiento = $request->fechaNacimiento;
 			$bautismo->cod_ciudad_nac_baut = $request->ciudadNacimiento;
 			$bautismo->fecha_bautismo = $request->fechaBautismo;
@@ -100,11 +105,18 @@ class BautismosController extends Controller {
 			$bautismo->abuela_materna = $request->abuelaMaterna;
 			$bautismo->nom_padrino = $request->padrino;
 			$bautismo->nom_madrina = $request->madrina;
+			$bautismo->genero = $request->genero;
 			$bautismo->fecha_nacimiento = $request->fechaNacimiento;
 			$bautismo->cod_ciudad_nac_baut = $request->ciudadNacimiento;
 			$bautismo->fecha_bautismo = $request->fechaBautismo;
 			$bautismo->cod_celebrante = $request->celebrante;
 			$bautismo->save();
+			$cambioSistema = new CambiosSistema();
+			$cambioSistema->cambio_id = $bautismo->id;
+			$cambioSistema->tipo_cambio = 'Bautismos';
+			$cambioSistema->usuario_id = \Auth::user()->id;
+			$cambioSistema->descipcion_cambio = 'Actualizacion de registro de batuizado por decreto';
+			$cambioSistema->save();
 			$anotacion = new Anotacione();
 			$anotacion->cod_bautisado = $bautismo->id;
 			$anotacion->Anotacion = $request->anotacion;
@@ -133,6 +145,7 @@ class BautismosController extends Controller {
 			$bautismo->abuela_materna = $request->abuelaMaterna;
 			$bautismo->nom_padrino = $request->padrino;
 			$bautismo->nom_madrina = $request->madrina;
+			$bautismo->genero = $request->genero;
 			$bautismo->fecha_nacimiento = $request->fechaNacimiento;
 			$bautismo->cod_ciudad_nac_baut = $request->ciudadNacimiento;
 			$bautismo->fecha_bautismo = $request->fechaBautismo;
@@ -157,6 +170,12 @@ class BautismosController extends Controller {
 	{
 		try {
 			$anotacion = Anotacione::find($request->id);
+			$cambioSistema = new CambiosSistema();
+			$cambioSistema->cambio_id = $anotacion->cod_bautisado;
+			$cambioSistema->tipo_cambio = 'Bautismos';
+			$cambioSistema->usuario_id = \Auth::user()->id;
+			$cambioSistema->descipcion_cambio = 'Eliminacion de anotacion de bautizo. Anotacion eliminada:'.$anotacion->Anotacion;
+			$cambioSistema->save();
 			$anotacion->delete();
 			return response()->json([
 				'estado' => 'ok',

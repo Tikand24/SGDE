@@ -89,6 +89,16 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12">
+					<label>Genero</label>
+					<select class="chosen" data-placeholder="Seleccione un genero..."  id="genero" v-model="bautizado.genero">
+						@foreach ($generos as $genero)
+							<option value="{{ $genero }}">{{ $genero }}</option>	
+						@endforeach
+					</select>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-6">
 					<label>Fecha de nacimiento</label>
 					<div class="input-group form-group">
@@ -108,7 +118,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row m-b-25">
 				<div class="col-sm-12 col-md-6 col-lg-6">
 					<label>Fecha de bautizo</label>
 					<div class="input-group form-group">

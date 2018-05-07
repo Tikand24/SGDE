@@ -14,6 +14,9 @@
 Route::get('/', function () {
 	return view('welcome');
 });
+Route::get('/horario-eucaristias/{dia}', 'HomeController@horarioSemanal');
+Route::post('/registrar-feligres','HomeController@guardarFeligres');
+Route::post('/registrar-mensaje-feligres','HomeController@guardarMensajeFeligres');
 
 Auth::routes();
 
@@ -37,23 +40,42 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::prefix('administracion/cenizarios/')
 		->namespace('Administrativos')
 		->group(function () {
-			Route::get('cenizarios', 'CenizariosController@index');
+			Route::get('', 'CenizariosController@index');
 			Route::get('crear-cenizario', 'CenizariosController@create');
 			Route::post('guardar-cenizario', 'CenizariosController@guardar');
+			Route::post('validar-numero-cenizario', 'CenizariosController@validarNumeroCenizario');
+			Route::post('guardar-cenizario', 'CenizariosController@guardar');
+			Route::post('editar', 'CenizariosController@edit');
+			Route::post('cenizario-editar', 'CenizariosController@datosCenizario');
+			Route::post('actualizar-cenizario', 'CenizariosController@actualizarCenizario');
+			Route::get('titulo/{id}/{firma}', 'CenizariosController@generarTitulo');
 		});
 	Route::prefix('administracion/osarios/')
 		->namespace('Administrativos')
 		->group(function () {
 			Route::get('', 'OsariosController@index');
 			Route::get('crear-osario', 'OsariosController@create');
+			Route::get('complementos', 'OsariosController@complementos');
+			Route::get('titulo/{id}/{firma}', 'OsariosController@generarTitulo');
 			Route::post('guardar-osario', 'OsariosController@guardar');
+			Route::post('validar-numero-osario', 'OsariosController@validarNumeroOsario');
+			Route::post('editar', 'OsariosController@edit');
+			Route::post('osario-editar', 'OsariosController@datosOsario');
+			Route::post('actualizar-osario', 'OsariosController@actualizarOsario');
+			
 		});
 	Route::prefix('administracion/matrimonios/')
 		->namespace('Administrativos')
 		->group(function () {
 			Route::get('', 'MatrimoniosController@index');
 			Route::get('crear-matrimonio', 'MatrimoniosController@create');
+			Route::get('complementos-create', 'MatrimoniosController@complementosCreate');
+			Route::post('editar', 'MatrimoniosController@edit');
 			Route::post('guardar-matrimonio', 'MatrimoniosController@guardar');
+			Route::post('matrimonio-editar', 'MatrimoniosController@datosEditar');
+			Route::post('actualizar-matrimonio', 'MatrimoniosController@actualizarMatrimonio');		
+			Route::post('eliminar-anotacion', 'MatrimoniosController@eliminarAnotacion');
+			Route::get('partida/{id}/{firma}', 'MatrimoniosController@reportePartida');	
 		});
 	Route::prefix('administracion/confirmaciones/')
 		->namespace('Administrativos')

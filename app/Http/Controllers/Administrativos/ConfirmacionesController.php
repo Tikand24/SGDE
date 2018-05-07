@@ -10,8 +10,10 @@ use App\GruposConfirmacione;
 use Validator;
 use App\AnotacionConfirmacione;
 use App\CelebParroquia;
-
+use App\CambiosSistema;
+use App\Http\Helpers\EnumsTrait;
 class ConfirmacionesController extends Controller {
+use EnumsTrait;
 	public function index(Request $request) {
 		$confirmaciones = Confirmacione::buscar($request->name)->orderBy('id', 'DESC')->paginate(50);
 		return view('administracion.confirmaciones.index')->with('confirmaciones', $confirmaciones);
@@ -44,7 +46,10 @@ class ConfirmacionesController extends Controller {
 	public function complementosCreate()
 	{
 		try {
-			return response()->json(['parroquias'=>Parroquia::with(['Municipio'])->get()]); 
+			return response()->json([
+				'parroquias'=>Parroquia::with(['Municipio'])->get(),
+				'generos'=>$this->getEnumValues('confirmaciones', 'genero')
+			]); 
 		} catch (Exception $e) {
 			return response()->json($e->getMessage());
 		}
@@ -71,6 +76,7 @@ class ConfirmacionesController extends Controller {
 			$confirmacion->padre=$request->padre;
 			$confirmacion->madrina=$request->madrina;
 			$confirmacion->padrino=$request->padrino;
+			$confirmacion->genero=$request->genero;
 			$confirmacion->grupo_confirmado_id=$request->grupoConfirmado['id'];
 			$confirmacion->lib_baut=$request->libroBautismo;
 			$confirmacion->fol_baut=$request->folioBautismo;
@@ -111,18 +117,31 @@ class ConfirmacionesController extends Controller {
 			$confirmacion->padre=$request->padre;
 			$confirmacion->madrina=$request->madrina;
 			$confirmacion->padrino=$request->padrino;
+			$confirmacion->genero=$request->genero;
 			$confirmacion->grupo_confirmado_id=$request->grupoConfirmado['id'];
 			$confirmacion->lib_baut=$request->libroBautismo;
 			$confirmacion->fol_baut=$request->folioBautismo;
 			$confirmacion->part_baut=$request->partidaBautismo;
 			$confirmacion->parroquia_baut_id=$request->parroquiaBautizado;
 			$confirmacion->save();
-			if ($request->tipoEdicion) {
+			if ($request->tipoEdicion=="true") {
+				$cambioSistema = new CambiosSistema();
+				$cambioSistema->cambio_id = $confirmacion->id;
+				$cambioSistema->tipo_cambio = 'Confirmacion';
+				$cambioSistema->usuario_id = \Auth::user()->id;
+				$cambioSistema->descipcion_cambio = 'Actualizacion de registro de confirmacion por decreto';
+				$cambioSistema->save();
 				$anotacion= new AnotacionConfirmacione();
 				$anotacion->confirmacion_id=$confirmacion->id;
 				$anotacion->anotacion=$request->anotacion;
 				$anotacion->save();
-
+			}else{
+				$cambioSistema = new CambiosSistema();
+				$cambioSistema->cambio_id = $confirmacion->id;
+				$cambioSistema->tipo_cambio = 'Confirmacion';
+				$cambioSistema->usuario_id = \Auth::user()->id;
+				$cambioSistema->descipcion_cambio = 'Actualizacion de registro de confirmacion por sistema';
+				$cambioSistema->save();
 			}
 			return response()->json([
 				'estado' => 'ok',
@@ -142,7 +161,7 @@ class ConfirmacionesController extends Controller {
 	}
 	public function reportePartida($id, $firma) {
 		try {
-			$datos = Confirmacione::where('id', $id)->with(['GrupoConfirmacion.CelebranteParroquia.Celebrante'])->first();
+			$datos = Confirmacione::where('id', $id)->with(['GrupoConfirmacion.CelebranteParroquia.Celebrante','Parroquia.Municipio.Departamento'])->first();
 			$anotaciones = AnotacionConfirmacione::where('confirmacion_id', $id)->get();
 			$quienFirma = CelebParroquia::with(['Celebrante'])->where('celebrantes_id', $firma)->first();
 			if ($this->validarPartidaPDF($datos) == '') {
@@ -159,13 +178,19 @@ class ConfirmacionesController extends Controller {
 	{
 		try {
 			$anotacion = AnotacionConfirmacione::find($request->id);
+			$cambioSistema = new CambiosSistema();
+			$cambioSistema->cambio_id = $anotacion->confirmacion_id;
+			$cambioSistema->tipo_cambio = 'Confrimacion';
+			$cambioSistema->usuario_id = \Auth::user()->id;
+			$cambioSistema->descipcion_cambio = 'Eliminacion de anotacion de confirmacion. Anotacion eliminada:'.$anotacion->anotacion;
+			$cambioSistema->save();
 			$anotacion->delete();
 			return response()->json([
 				'estado' => 'ok',
 				'tipo' => 'delete'
 			]);
 		} catch (Exception $e) {
-			return response()->json('Error');
+			return response()->json($e->getMessage());
 		}
 	}
 
