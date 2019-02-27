@@ -61,7 +61,7 @@ $yhoy = date('Y');
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>Partida de bautismo {{ $datos->nombre }}</title>
+	<title>Partida de bautismo {{ strtoupper($datos->nombre) }}</title>
 	<style>
 	*{
 		font-family: Helvetica;
@@ -116,9 +116,9 @@ $yhoy = date('Y');
 	<pre id="folio">
 		<strong>Libro: {{ $datos->libro }}</strong>     <strong>Folio: {{ $datos->folio }}</strong>     <strong>Partida: {{ $datos->partida }}</strong>
 	</pre>
-	<p id="nombre"><strong>{{ $datos->nombre }}</strong></p>
+	<p id="nombre"><strong>{{ strtoupper($datos->nombre) }}</strong></p>
 	<div id="textoPrinc">
-		En la parroquia de la Sagrada Familia de Fusagasugá a los {{ $diaBautizo }} días del mes de  {{ $mesBautizo }} de  {{ $yearBautizo }} Fue bautizado: <strong>{{ $datos->nombre }}</strong> nacido en {{ $datos->municipio->nom_municipio }}-{{ $datos->municipio->departamento->nom_departamento }} el  {{$diaNacimiento}} de  {{$mesNacimiento}} de  {{$yearNacimiento}}.
+		En la parroquia de la Sagrada Familia de Fusagasugá a los {{ $diaBautizo }} días del mes de  {{ $mesBautizo }} de  {{ $yearBautizo }} Fue bautizado: <strong>{{ strtoupper($datos->nombre) }}</strong> nacido en {{ $datos->municipio->nom_municipio }}-{{ $datos->municipio->departamento->nom_departamento }} el  {{$diaNacimiento}} de  {{$mesNacimiento}} de  {{$yearNacimiento}}.
 	</div>
 	<div class="justify-text">
 	<div>

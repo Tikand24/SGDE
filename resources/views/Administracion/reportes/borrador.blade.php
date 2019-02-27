@@ -153,7 +153,7 @@ $yhoy = date('Y');
 		</div>
 		<p id="ofrenda"><strong>ofrenda: ${{ $valor }}</strong></p>
 		<div id="contenido">
-			<strong>Nombre del Bautizado:</strong> {{ $datos->nombre }}<br>
+			<strong>Nombre del Bautizado:</strong> {{ strtoupper($datos->nombre) }}<br>
 			<strong>Fecha y lugar de nacimiento:</strong> {{$diaNacimiento}} de  {{$mesNacimiento}} de  {{$yearNacimiento}}. {{ $datos->municipio->nom_municipio }}-{{ $datos->municipio->departamento->nom_departamento }}.<br>
 			<strong>Fecha de bautismo:</strong>{{ $diaBautizo }} de  {{ $mesBautizo }} de  {{ $yearBautizo }}.<br>
 			<strong>Nombre de los padres:</strong>
