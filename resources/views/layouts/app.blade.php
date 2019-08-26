@@ -19,6 +19,7 @@
         <link href="{{ asset('administracion/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/farbtastic/farbtastic.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/vendors/bower_components/chosen/chosen.css') }}" rel="stylesheet">
+        <link href="{{ asset('administracion/vendors/bootgrid/jquery.bootgrid.min.css') }}" rel="stylesheet">
         <!-- CSS -->
         <link href="{{ asset('administracion/css/app_1.min.css') }}" rel="stylesheet">
         <link href="{{ asset('administracion/css/app_2.min.css') }}" rel="stylesheet">
@@ -123,6 +124,8 @@
         <script src="{{ asset('administracion/vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
         <script src="{{ asset('administracion/vendors/bower_components/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
         <script src="{{ asset('administracion/vendors/summernote/dist/summernote-updated.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bootgrid/jquery.bootgrid.updated.min.js') }}"></script>
+        <script src="{{ asset('administracion/vendors/bower_components/autosize/dist/autosize.min.js') }}"></script>
 
 
         <!-- Placeholder for IE9 -->

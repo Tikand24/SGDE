@@ -661,7 +661,7 @@
                     return "Domingo";
                 }
                 return "";
-            }   
+            }
         },
         mounted:function(){
             moment.locale("es");

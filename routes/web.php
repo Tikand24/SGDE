@@ -15,8 +15,12 @@ Route::get('/', function () {
 	return view('welcome');
 });
 Route::get('/horario-eucaristias/{dia}', 'HomeController@horarioSemanal');
-Route::post('/registrar-feligres','HomeController@guardarFeligres');
-Route::post('/registrar-mensaje-feligres','HomeController@guardarMensajeFeligres');
+Route::get('/all-horario', 'HomeController@allHorario');
+Route::get('/avisos-parroquiales', 'HomeController@avisosParroquiales');
+Route::get('/all-avisos-parroquiales', 'HomeController@allAvisosParroquiales');
+Route::post('/registrar-feligres', 'HomeController@guardarFeligres');
+Route::post('/registrar-mensaje-feligres', 'HomeController@guardarMensajeFeligres');
+Route::get('/clientes', 'HomeController@getClientes');
 
 Auth::routes();
 
@@ -62,7 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('editar', 'OsariosController@edit');
 			Route::post('osario-editar', 'OsariosController@datosOsario');
 			Route::post('actualizar-osario', 'OsariosController@actualizarOsario');
-			
+
 		});
 	Route::prefix('administracion/matrimonios/')
 		->namespace('Administrativos')
@@ -73,9 +77,9 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('editar', 'MatrimoniosController@edit');
 			Route::post('guardar-matrimonio', 'MatrimoniosController@guardar');
 			Route::post('matrimonio-editar', 'MatrimoniosController@datosEditar');
-			Route::post('actualizar-matrimonio', 'MatrimoniosController@actualizarMatrimonio');		
+			Route::post('actualizar-matrimonio', 'MatrimoniosController@actualizarMatrimonio');
 			Route::post('eliminar-anotacion', 'MatrimoniosController@eliminarAnotacion');
-			Route::get('partida/{id}/{firma}', 'MatrimoniosController@reportePartida');	
+			Route::get('partida/{id}/{firma}', 'MatrimoniosController@reportePartida');
 		});
 	Route::prefix('administracion/confirmaciones/')
 		->namespace('Administrativos')
@@ -90,5 +94,22 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('actualizar-confirmacion', 'ConfirmacionesController@updated');
 			Route::post('eliminar-anotacion', 'ConfirmacionesController@eliminarAnotacion');
 			Route::get('partida/{id}/{firma}', 'ConfirmacionesController@reportePartida');
+		});
+	Route::prefix('administracion/horarios/')
+		->namespace('Administrativos')
+		->group(function () {
+			Route::get('', 'HorariosController@index');
+			Route::post('update-horario-semanal', 'HorariosController@update');
+			Route::post('save-horario-semanal', 'HorariosController@createSemanal');
+			Route::post('activar-horario-semanal', 'HorariosController@estadoActivo');
+			Route::post('inactivar-horario-semanal', 'HorariosController@estadoInactivo');
+		});
+	Route::prefix('administracion/avisos-parroquiales/')
+		->namespace('Administrativos')
+		->group(function () {
+			Route::get('', 'AvisosParroquialesController@index');
+			Route::post('crear-aviso', 'AvisosParroquialesController@store');
+			Route::post('actualizar-aviso', 'AvisosParroquialesController@update');
+			Route::post('eliminar-aviso', 'AvisosParroquialesController@delete');
 		});
 });

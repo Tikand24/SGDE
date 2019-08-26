@@ -60,6 +60,9 @@
                 <li><a href="top-mainmenu.html">Matrimonios</a></li>
             </ul>
         </li>
+        <li>
+            <a href="/administracion/horarios"><i class="zmdi zmdi-account-calendar"></i>Horarios eucaristicos</a>
+        </li>
         <li class="sub-menu">
             <a href="" data-ma-action="submenu-toggle"><i class="zmdi zmdi-menu"></i> 3 Level Menu</a>
 
