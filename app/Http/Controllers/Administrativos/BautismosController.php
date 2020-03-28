@@ -13,25 +13,49 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\EnumsTrait;
 use Validator;
 
-class BautismosController extends Controller {
+class BautismosController extends Controller
+{
 	use EnumsTrait;
-	public function index(Request $request) {
+	public function index(Request $request)
+	{
 		$batuismos = Bautisado::buscar($request->name)->orderBy('id', 'DESC')->paginate(50);
 		return view('administracion.bautismos.index')->with('bautizados', $batuismos);
 	}
-	public function create() {
+	public function getAll()
+	{
+		$batuismos = Bautisado::orderBy('id', 'DESC')->paginate(20);
+		return response()->json(['data' => $batuismos]);
+	}
+	public function search($name)
+	{
+		$batuismos = Bautisado::buscar($name)->orderBy('id', 'DESC')->paginate(20);
+		return response()->json(['data' => $batuismos]);
+	}
+	public function create()
+	{
 		$municipios = Municipio::with(['Departamento'])->get();
 		$celebrante = Celebrante::all();
-		$generos=$this->getEnumValues('bautisados', 'genero');
-		return view('administracion.bautismos.create')->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos',$generos);
+		$generos = $this->getEnumValues('bautisados', 'genero');
+		return view('administracion.bautismos.create')->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos', $generos);
 	}
-	public function edit(Request $request) {
+	public function edit(Request $request)
+	{
 		$municipios = Municipio::with(['Departamento'])->get();
 		$celebrante = Celebrante::all();
-		$generos=$this->getEnumValues('bautisados', 'genero');
-		return view('administracion.bautismos.editar')->with('tipo', $request->tipoAnotacion)->with('bautismo', $request->bautizado)->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos',$generos);
+		$generos = $this->getEnumValues('bautisados', 'genero');
+		return view('administracion.bautismos.editar')->with('tipo', $request->tipoAnotacion)->with('bautismo', $request->bautizado)->with('municipios', $municipios)->with('celebrantes', $celebrante)->with('generos', $generos);
 	}
-	public function bautizadoPorId(Request $request) {
+	public function bautizadoById($id)
+	{
+		$bautizado = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante.Celebrante', 'CelebranteParroquia.Celebrante'])->first();
+		$anotaciones = Anotacione::where('cod_bautisado', $id)->with(['Parroco.Celebrante'])->get();
+		return response()->json([
+			'bautizado' => $bautizado,
+			'anotaciones' => $anotaciones,
+		]);
+	}
+	public function bautizadoPorId(Request $request)
+	{
 		$datos = Bautisado::where('id', $request->id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();
 		$anotaciones = Anotacione::where('cod_bautisado', $request->id)->get();
 		return response()->json([
@@ -39,15 +63,89 @@ class BautismosController extends Controller {
 			'anotaciones' => $anotaciones,
 		]);
 	}
-	public function ejemplo() {
+	public function ejemplo()
+	{
 		$municipios = Municipio::with(['Departamento'])->get();
 		return response()->json($municipios);
 	}
-	public function celebrantesParroquia() {
+	public function celebrantesParroquia()
+	{
 		$celeb = CelebParroquia::with(['Celebrante'])->where('estado', 'Activo')->get();
 		return response()->json($celeb);
 	}
-	public function guardar(Request $request) {
+	public function store(Request $request)
+	{
+		try {
+			$validador = Validator::make($request->all(), [
+				'nombre' => 'required',
+				'fecha_nacimiento' => 'required',
+				'cod_ciudad_nac_baut' => 'required',
+			]);
+			if ($validador->fails()) {
+				return response()->json([
+					'estado' => 'validador',
+					'errors' => $validador->errors(),
+				]);
+			}
+			$bautizado = Bautisado::create($request->all());
+			$bautizado = Bautisado::where('id', $bautizado->id)->first();
+			for ($i = 0; $i < count($request->anotaciones); $i++) {
+				$anotacion = ['cod_bautisado' => $bautizado->id, 'parroco_firma' => $request->anotaciones[$i]['parroco']['id'], 'anotacion' => $request->anotaciones[$i]['anotacion']];
+				Anotacione::create($anotacion);
+			}
+			return response()->json([
+				'estado' => 'saved',
+				'message' => 'Bautizado creado con exito',
+				'data' => $bautizado
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'message' => 'Se presento un error en el servidor :' . $e->getMessage(),
+				'trace' => $e->getTrace()
+			], 500);
+		}
+	}
+	public function update(Request $request)
+	{
+		try {
+			$validador = Validator::make($request->all(), [
+				'nombre' => 'required',
+				'fecha_nacimiento' => 'required',
+				'cod_ciudad_nac_baut' => 'required',
+			]);
+			if ($validador->fails()) {
+				return response()->json([
+					'estado' => 'validador',
+					'errors' => $validador->errors(),
+				]);
+			}
+			$bautizado = Bautisado::find($request->id);
+			$bautizado->update($request->all());
+			$bautizado = Bautisado::where('id', $bautizado->id)->first();
+			for ($i = 0; $i < count($request->anotaciones); $i++) {
+				if (is_null($request->anotaciones[$i]['id'])) {
+					$anotacion = ['cod_bautisado' => $bautizado->id, 'parroco_firma' => $request->anotaciones[$i]['parroco']['id'], 'anotacion' => $request->anotaciones[$i]['anotacion']];
+					Anotacione::create($anotacion);
+				} else {
+					$anotacion = Anotacione::find($request->anotaciones[$i]['id']);
+					$data = ['cod_bautisado' => $bautizado->id, 'parroco_firma' => $request->anotaciones[$i]['parroco']['id'], 'anotacion' => $request->anotaciones[$i]['anotacion']];
+					$anotacion->update($data);
+				}
+			}
+			return response()->json([
+				'estado' => 'saved',
+				'message' => 'Bautizado creado con exito',
+				'data' => Bautisado::where('id', $bautizado->id)->first()
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'message' => 'Se presento un error en el servidor',
+				'trace' => $e->getMessage()
+			], 500);
+		}
+	}
+	public function guardar(Request $request)
+	{
 		try {
 			$validador = Validator::make($request->all(), [
 				'nombre' => 'required',
@@ -90,7 +188,8 @@ class BautismosController extends Controller {
 			return response()->json('Error');
 		}
 	}
-	public function actualizarPorDecreto(Request $request) {
+	public function actualizarPorDecreto(Request $request)
+	{
 		try {
 			$bautismo = Bautisado::find($request->id);
 			$bautismo->nombre = $request->nombre;
@@ -130,7 +229,8 @@ class BautismosController extends Controller {
 			return response()->json('Error');
 		}
 	}
-	public function actualizarPorSistema(Request $request) {
+	public function actualizarPorSistema(Request $request)
+	{
 		try {
 			$bautismo = Bautisado::find($request->id);
 			$bautismo->nombre = $request->nombre;
@@ -174,7 +274,7 @@ class BautismosController extends Controller {
 			$cambioSistema->cambio_id = $anotacion->cod_bautisado;
 			$cambioSistema->tipo_cambio = 'Bautismos';
 			$cambioSistema->usuario_id = \Auth::user()->id;
-			$cambioSistema->descipcion_cambio = 'Eliminacion de anotacion de bautizo. Anotacion eliminada:'.$anotacion->Anotacion;
+			$cambioSistema->descipcion_cambio = 'Eliminacion de anotacion de bautizo. Anotacion eliminada:' . $anotacion->Anotacion;
 			$cambioSistema->save();
 			$anotacion->delete();
 			return response()->json([
@@ -185,7 +285,8 @@ class BautismosController extends Controller {
 			return response()->json('Error');
 		}
 	}
-	public function reportePartida($id, $firma) {
+	public function reportePartida($id, $firma)
+	{
 		try {
 			$datos = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante', 'CelebranteParroquia'])->first();
 			$anotaciones = Anotacione::where('cod_bautisado', $id)->get();
@@ -200,7 +301,8 @@ class BautismosController extends Controller {
 			dd('Algo ha salido mal al generar el reporte pdf');
 		}
 	}
-	public function reporteBorrador($id, $valor) {
+	public function reporteBorrador($id, $valor)
+	{
 		try {
 			$datos = Bautisado::where('id', $id)->with(['Municipio.Departamento', 'Celebrante'])->first();
 			$anotaciones = Anotacione::where('cod_bautisado', $id)->get();
@@ -214,7 +316,8 @@ class BautismosController extends Controller {
 			echo $e->getMessage();
 		}
 	}
-	protected function validarPartidaPDF($bautizado) {
+	protected function validarPartidaPDF($bautizado)
+	{
 		$mensaje = '';
 		if ($bautizado->libro == null) {
 			$mensaje = 'Libro';
@@ -250,7 +353,8 @@ class BautismosController extends Controller {
 		}
 		return $mensaje;
 	}
-	protected function validarBorradorPDF($bautizado) {
+	protected function validarBorradorPDF($bautizado)
+	{
 		$mensaje = '';
 		if ($bautizado->fecha_nacimiento == null) {
 			$mensaje = 'Fecha de nacimiento';

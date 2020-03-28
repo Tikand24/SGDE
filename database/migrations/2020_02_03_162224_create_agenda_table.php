@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableAvisosParroquiales extends Migration
+class CreateAgendaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateTableAvisosParroquiales extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('avisos_parroquiales')) {
-            Schema::create('avisos_parroquiales', function (Blueprint $table) {
+        if (!Schema::hasTable('agenda')) {
+            Schema::create('agenda', function (Blueprint $table) {
                 $table->increments('id');
-                $table->longText('descripcion');
+                $table->dateTime('fecha');
+                $table->mediumText('intencion');
+                $table->integer('lugar');
+                $table->integer('celebrante');
+                $table->integer('usuario');
                 $table->timestamps();
             });
         }
@@ -29,6 +33,6 @@ class CreateTableAvisosParroquiales extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avisos_parroquiales');
+        Schema::dropIfExists('agenda');
     }
 }

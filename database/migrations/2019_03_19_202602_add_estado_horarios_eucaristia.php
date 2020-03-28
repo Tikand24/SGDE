@@ -13,9 +13,13 @@ class AddEstadoHorariosEucaristia extends Migration
      */
     public function up()
     {
-        Schema::table('horario_eucaristias', function (Blueprint $table) {
-            $table->enum('estado',['Activo','Inactivo'])->nullable();
-        });
+        if (!Schema::hasTable('table')) {
+            if (!Schema::hasColumn('horario_eucaristias', 'estado')) {
+                Schema::table('horario_eucaristias', function (Blueprint $table) {
+                    $table->enum('estado',['Activo','Inactivo'])->nullable();
+                });
+            }
+        }
     }
 
     /**

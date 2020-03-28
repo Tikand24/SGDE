@@ -13,13 +13,15 @@ class CreteTableSemanasanta extends Migration
      */
     public function up()
     {
-        Schema::create('semana_santa', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('dia_eucaristia_id');
-            $table->longText('description');
-            $table->timestamps();
-            $table->foreign('dia_eucaristia_id')->references('id')->on('dias_eucaristias')->onDelete('RESTRICT');
-        });
+        if (!Schema::hasTable('semana_santa')) {
+            Schema::create('semana_santa', function (Blueprint $table) {
+                $table->increments('id');
+                $table->unsignedInteger('dia_eucaristia_id');
+                $table->longText('description');
+                $table->timestamps();
+                $table->foreign('dia_eucaristia_id')->references('id')->on('dias_eucaristias')->onDelete('RESTRICT');
+            });
+        }
     }
 
     /**
