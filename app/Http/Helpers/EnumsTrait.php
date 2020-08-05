@@ -1,5 +1,7 @@
 <?php
-namespace App\Http\helpers;
+
+namespace App\Http\Helpers;
+
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -10,25 +12,22 @@ use Illuminate\Support\Facades\DB;
  */
 trait EnumsTrait
 {
-    public static function getEnumValues($table, $column) {
-
-        $type = DB::select( DB::raw("SHOW COLUMNS FROM ".$table." WHERE Field = '".$column."'") )[0]->Type;
+    public static function getEnumValues($table, $column)
+    {
+        $type = DB::select(DB::raw("SHOW COLUMNS FROM " . $table . " WHERE Field = '" . $column . "'"))[0]->Type;
         $dataTypes = explode("(", $type);
         $dataType = $dataTypes[0];
-        if ($dataType == 'enum' || $dataType=='set'){
+        if ($dataType == 'enum' || $dataType == 'set') {
 
-            preg_match('/^'.$dataType.'\((.*)\)$/', $type, $matches);
+            preg_match('/^' . $dataType . '\((.*)\)$/', $type, $matches);
             $enum = array();
-            foreach( explode(',', $matches[1]) as $value )
-            {
-                $v = trim( $value, "'" );
+            foreach (explode(',', $matches[1]) as $value) {
+                $v = trim($value, "'");
                 $enum = array_add($enum, $v, $v);
             }
             return $enum;
         }
 
         return;
-
     }
-
 }

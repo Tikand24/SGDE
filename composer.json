@@ -24,7 +24,8 @@
             "database/factories"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Faker\\Provider\\uk_UA\\": "vendor/fzaninotto/faker/src/Faker/Provider/uk_UA/"
         }
     },
     "autoload-dev": {

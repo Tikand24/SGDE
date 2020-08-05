@@ -6,7 +6,7 @@
  * Time: 2:36 PM
  */
 
-namespace App\Http\helpers;
+namespace App\Http\Helpers;
 
 
 use Illuminate\Support\Facades\Storage;
