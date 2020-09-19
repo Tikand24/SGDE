@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Basicos;
 
 use App\Http\Controllers\Controller;
-use App\Models\Base\Municipios;
-use App\Models\Sistema\CelebrantesParroquias;
+use App\Models\Sistema\Municipios;
+use App\Models\Ministerio\CelebrantesParroquias;
+use App\Models\Base\Genero;
 
 class BasicosController extends Controller
 {
@@ -29,10 +30,7 @@ class BasicosController extends Controller
             ->orWhere('estado', 'Inactivo')
             ->with('celebrante')
             ->get());
-        $complementos->put('gender', [
-            ['id' => 'Masculino', 'abreviatura' => 'Masculino'],
-            ['id' => 'Femenino', 'abreviatura' => 'Femenino']
-        ]);
+        $complementos->put('gender', Genero::all());
         return response()->json(['data' => $complementos]);
     }
 }

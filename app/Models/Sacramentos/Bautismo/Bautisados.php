@@ -2,9 +2,9 @@
 
 namespace App\Models\Sacramentos\Bautismo;
 
-use App\Models\Base\Genero;
-use App\Models\Base\Municipios;
-use App\Models\Base\User;
+use App\Models\Sistema\Genero;
+use App\Models\Sistema\Municipios;
+use App\Models\Sistema\User;
 use App\Models\Sistema\CelebrantesParroquias;
 use App\Models\Sistema\Estado;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,6 @@ class Bautisados extends Model
 {
     protected $table = 'bautisados';
     protected $fillable = [
-        'id',
         'nombre',
         'libro',
         'folio',
@@ -30,8 +29,8 @@ class Bautisados extends Model
         'fecha_bautismo',
         'updated_at',
         'created_at',
-        'estados_id',
         'users_id',
+        'estados_id',
         'municipios_id',
         'celebrantes_parroquias_id_celebrante',
         'celebrantes_parroquias_id_parroco',

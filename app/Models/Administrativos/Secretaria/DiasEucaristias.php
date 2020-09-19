@@ -7,8 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class DiasEucaristias extends Model
 {
     protected $table = 'dias_eucaristias';
-    public function horarioEucaristia()
+
+    protected $fillable = [
+        'dia_semana',
+        'estados_id',
+        'users_id',
+    ];
+    public function estado()
     {
-        return $this->hasMany(HorarioEucaristias::class);
+        return $this->belongsTo(Estado::class, 'estados_id');
+    }
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

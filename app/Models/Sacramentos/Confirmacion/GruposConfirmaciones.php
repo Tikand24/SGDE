@@ -3,6 +3,8 @@
 namespace App\Models\Sacramentos\Confirmacion;
 
 use App\Models\Sistema\CelebrantesParroquias;
+use App\Models\Sistema\User;
+use App\Models\Sistema\Estado;
 use Illuminate\Database\Eloquent\Model;
 
 class GruposConfirmaciones extends Model
@@ -20,5 +22,13 @@ class GruposConfirmaciones extends Model
     public function confirmaciones()
     {
         return $this->hasMany(Confirmaciones::class);
+    }
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'estados_id');
+    }
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

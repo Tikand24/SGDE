@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Feligre;
+use App\Models\Administrativos\Pastoral\Feligres;
 use App\Http\Controllers\Controller;
 use App\Models\Administrativos\Secretaria\AvisosParroquiales;
 use App\Models\Administrativos\Secretaria\HorarioEucaristias;
 use App\Models\Administrativos\Secretaria\MensajesSacerdotes;
-use App\Models\Sistema\Feligres;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 

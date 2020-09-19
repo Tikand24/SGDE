@@ -3,7 +3,7 @@
 namespace App\Models\Sacramentos\Matrimonio;
 
 use App\Models\Sistema\CelebrantesParroquias;
-use App\Models\Sistema\Parroquias;
+use App\Models\Base\Parroquias;
 use Illuminate\Database\Eloquent\Model;
 
 class Matrimonios extends Model

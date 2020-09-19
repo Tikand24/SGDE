@@ -2,10 +2,11 @@
 
 namespace App\Models\Sacramentos\Confirmacion;
 
-use App\Models\Base\Genero;
-use App\Models\Base\User;
+use App\Models\Sistema\Genero;
+use App\Models\Sistema\User;
 use App\Models\Sistema\Estado;
-use App\Models\Sistema\Parroquias;
+use App\Models\Base\Parroquias;
+use App\Models\Sacramentos\Confirmacion\GruposConfirmaciones;
 use Illuminate\Database\Eloquent\Model;
 
 class Confirmaciones extends Model

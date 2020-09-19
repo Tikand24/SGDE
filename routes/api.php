@@ -26,18 +26,18 @@ Route::prefix('basics/')
 
 Route::get('all-complements', 'Basicos\BasicosController@obtenerTodos');
 
-Route::resource('bautismo', 'Administrativos\Bautismos\BautismosController');
-Route::get('bautismo/search/pagination/{name}/{numberItems}', 'Administrativos\Bautismos\BautismosController@search');
-Route::get('bautismo/pagination/{numberItems}', 'Administrativos\Bautismos\BautismosController@index');
-Route::resource('confirmacion', 'Administrativos\Confirmacion\ConfirmacionController');
-Route::get('confirmacion/search/pagination/{name}/{numberItems}', 'Administrativos\Confirmacion\ConfirmacionController@search');
-Route::get('confirmacion/pagination/{numberItems}', 'Administrativos\Confirmacion\ConfirmacionController@index');
-Route::resource('matrimonio', 'Administrativos\Matrimonios\MatrimonioController');
-Route::get('matrimonio/search/pagination/{name}/{numberItems}', 'Administrativos\Matrimonios\MatrimonioController@search');
-Route::get('matrimonio/pagination/{numberItems}', 'Administrativos\Matrimonios\MatrimonioController@index');
-Route::resource('osario', 'Administrativos\Osarios\OsarioController');
-Route::get('osario/search/pagination/{name}/{numberItems}', 'Administrativos\Osarios\OsarioController@search');
-Route::get('osario/pagination/{numberItems}', 'Administrativos\Osarios\OsarioController@index');
-Route::resource('cenizario', 'Administrativos\Cenizarios\CenizarioController');
-Route::get('cenizario/search/pagination/{name}/{numberItems}', 'Administrativos\Cenizarios\CenizarioController@search');
-Route::get('cenizario/pagination/{numberItems}', 'Administrativos\Cenizarios\CenizarioController@index');
+Route::resource('bautismo', 'BautismosController');
+Route::get('bautismo/search/pagination/{name}/{numberItems}', 'BautismosController@search');
+Route::get('bautismo/pagination/{numberItems}', 'BautismosController@index');
+Route::resource('confirmacion', 'ConfirmacionController');
+Route::get('confirmacion/search/pagination/{name}/{numberItems}', 'ConfirmacionController@search');
+Route::get('confirmacion/pagination/{numberItems}', 'ConfirmacionController@index');
+Route::resource('matrimonio', 'MatrimonioController');
+Route::get('matrimonio/search/pagination/{name}/{numberItems}', 'MatrimonioController@search');
+Route::get('matrimonio/pagination/{numberItems}', 'MatrimonioController@index');
+Route::resource('osario', 'OsarioController');
+Route::get('osario/search/pagination/{name}/{numberItems}', 'OsarioController@search');
+Route::get('osario/pagination/{numberItems}', 'OsarioController@index');
+Route::resource('cenizario', 'CenizarioController');
+Route::get('cenizario/search/pagination/{name}/{numberItems}', 'CenizarioController@search');
+Route::get('cenizario/pagination/{numberItems}', 'CenizarioController@index');
